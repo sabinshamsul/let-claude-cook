@@ -1,6 +1,7 @@
 ---
 name: lore
 description: The lore of a subsystem. Explains how code works (runtime flow, architecture, where things live, gotchas) at the level of a senior engineer onboarding onto it. For big questions, parallel explorers each trace one slice, then an explainer merges them into one walkthrough. Use only when the user invokes /lore by name, e.g. "/lore how does the price refetch job work?". For why code is shaped a certain way, use /receipts.
+model: sonnet
 disable-model-invocation: true
 ---
 

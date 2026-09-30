@@ -1,6 +1,7 @@
 ---
 name: receipts
 description: Show me the receipts. Answers "why is the code like this?" (design rationale, a threshold, a workaround, a regression, dead code) by sending one investigator per evidence source (git and PRs, ticket tracker, docs, team chat, monitoring, error tracking, analytics) in parallel, then a synthesizer that returns a cited answer with direct evidence kept apart from guesses. Use only when the user invokes /receipts by name, e.g. "/receipts why do we retry 3 times in fetchPrices?". For how code works, use /lore.
+model: sonnet
 disable-model-invocation: true
 ---
 

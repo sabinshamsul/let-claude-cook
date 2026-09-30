@@ -1,6 +1,7 @@
 ---
 name: bruh
 description: Explain the latest output in plain English. Turns the most recent retrieved content in the conversation (tickets, comments, pull requests, database query results, logs, errors, diffs, or a long technical answer) into a short, jargon-free summary a non-engineer can follow, using ELI5 explanations and tables where they help, while keeping the correct technical terms and explaining them. Use only when the user invokes /bruh by name, optionally followed by what to summarise (e.g. "/bruh comment 22736", "/bruh the PR").
+model: sonnet
 disable-model-invocation: true
 ---
 

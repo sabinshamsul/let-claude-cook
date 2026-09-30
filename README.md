@@ -125,6 +125,10 @@ for every attached repo.
 > `receipts`, `lore` and `are-we-cooked` start several sub agents, so they use more
 > tokens than a normal question. All three are read-only on your code.
 >
+> Models, to save tokens: `bruh`, `vibe-check`, `receipts` and `lore` run on **Sonnet**,
+> `lore`'s explorers on **Haiku**, and `are-we-cooked` on your session model (it is the
+> one job where a missed bug costs more than tokens), with Sonnet helpers.
+>
 > They are adapted from `why`, `how` and `blast-radius` in
 > [pstack](https://github.com/cursor/plugins/tree/main/pstack) by Lauren Tan (MIT).
 > Each plugin carries the original licence as `LICENSE-pstack`.

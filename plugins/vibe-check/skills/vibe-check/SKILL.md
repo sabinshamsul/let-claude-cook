@@ -1,6 +1,7 @@
 ---
 name: vibe-check
 description: Vibe check a Jira ticket (e.g. /vibe-check PROJ-150). Reads the ticket and all comments, classifies it as query-only, data bug, or API/code bug, and proposes the next step. Read-only, changes nothing.
+model: sonnet
 disable-model-invocation: true
 ---
 

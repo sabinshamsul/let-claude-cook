@@ -2,7 +2,7 @@
 name: explainer
 description: Explainer for /lore. Merges explorer findings (or explores alone for simple questions) into one architectural walkthrough for a senior engineer new to the area: overview, key concepts, how it works, where things live, gotchas. Read-only.
 tools: Read, Grep, Glob, Bash
-model: inherit
+model: sonnet
 ---
 
 You write an architectural explanation for a senior engineer who is new to this area. They should finish it with a solid mental model and enough bearings to start working in the code.

@@ -33,7 +33,7 @@ Step 4 is usually one small script that imports the same library or module the a
 3. **Look where grep stops.** The source of libraries you call (and their pinned version or local patch). When things run: async ordering, retries, teardown, cron timing. What a symbol search misses: JSON an API returns, a DB column, a file or wire format, another service or language reading the same data, config and feature flags, code three hops downstream.
 4. **Be honest about each risk.** A real chance and a real cost. Keep confirmed risks separate from ones you checked and cleared. Cite real `file:line`. A search that finds nothing is still an answer. Never invent a caller or an API.
 5. **Prove the one fact.** Write the script or test, run it, paste what happened.
-6. **Big or wide change?** Spawn 2 or 3 general-purpose sub agents in one message, each hunting one angle (data and formats, timing and lifecycle, callers and config), then merge what they find.
+6. **Big or wide change?** Spawn 2 or 3 general-purpose sub agents in one message, on the `sonnet` model, each hunting one angle (data and formats, timing and lifecycle, callers and config), then merge what they find.
 
 ## Output
 
