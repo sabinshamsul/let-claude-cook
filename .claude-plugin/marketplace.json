@@ -35,6 +35,11 @@
       "name": "mise-en-place",
       "source": "./plugins/mise-en-place",
       "description": "Session-start hook: builds a graphify code graph (no AI tokens) and tells Claude to use it before opening files."
+    },
+    {
+      "name": "let-it-cook",
+      "source": "./plugins/let-it-cook",
+      "description": "Jira ticket to reviewed, watched PR in one command, with 'ship it' and 'post it' checkpoints."
     }
   ]
 }

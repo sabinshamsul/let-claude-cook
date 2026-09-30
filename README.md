@@ -14,6 +14,7 @@ claude plugin install receipts@let-claude-cook
 claude plugin install lore@let-claude-cook
 claude plugin install are-we-cooked@let-claude-cook
 claude plugin install mise-en-place@let-claude-cook
+claude plugin install let-it-cook@let-claude-cook
 ```
 
 Or from inside a Claude Code session:
@@ -26,6 +27,7 @@ Or from inside a Claude Code session:
 /plugin install lore@let-claude-cook
 /plugin install are-we-cooked@let-claude-cook
 /plugin install mise-en-place@let-claude-cook
+/plugin install let-it-cook@let-claude-cook
 ```
 
 ## Plugins
@@ -106,6 +108,25 @@ config, code three hops away), finds the one fact the change is safe because of,
 /are-we-cooked:are-we-cooked            the uncommitted diff
 /are-we-cooked:are-we-cooked PR 42
 ```
+
+### `let-it-cook`: ticket to PR in one command
+
+```
+/let-it-cook:let-it-cook DATA-160
+```
+
+1. A cheap Jira helper (`jira-clerk`, Sonnet) reads the ticket and every comment and classifies it
+2. Finds the code (graphify first, then the built-in Haiku `Explore` helper)
+3. Smallest fix plus a failing-then-passing test, and runs the tests
+4. A fresh-eyes `reviewer` (Sonnet) checks the diff; major findings get fixed, max 2 rounds
+5. **Stops and shows you a summary. Nothing is committed until you reply "ship it"**
+6. Commits, pushes a branch, opens the PR, and watches it for CI failures and review comments
+7. `jira-clerk` drafts the ticket comment (plain-English summary plus technical details).
+   **Nothing is posted until you reply "post it"**
+
+Data bugs follow the "Running SQL" rules in your own CLAUDE.md, so the company-specific
+database steps live with you, not in this repo. It never merges, never pushes to the
+default branch, and never runs writes against a database.
 
 ### `mise-en-place`: prep the kitchen before cooking
 
