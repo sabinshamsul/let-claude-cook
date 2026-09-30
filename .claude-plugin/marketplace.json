@@ -30,6 +30,11 @@
       "name": "are-we-cooked",
       "source": "./plugins/are-we-cooked",
       "description": "What could this change break outside the diff? Proves the safety fact by running real code."
+    },
+    {
+      "name": "mise-en-place",
+      "source": "./plugins/mise-en-place",
+      "description": "Session-start hook: builds a graphify code graph (no AI tokens) and tells Claude to use it before opening files."
     }
   ]
 }

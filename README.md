@@ -13,6 +13,7 @@ claude plugin install vibe-check@let-claude-cook
 claude plugin install receipts@let-claude-cook
 claude plugin install lore@let-claude-cook
 claude plugin install are-we-cooked@let-claude-cook
+claude plugin install mise-en-place@let-claude-cook
 ```
 
 Or from inside a Claude Code session:
@@ -24,6 +25,7 @@ Or from inside a Claude Code session:
 /plugin install receipts@let-claude-cook
 /plugin install lore@let-claude-cook
 /plugin install are-we-cooked@let-claude-cook
+/plugin install mise-en-place@let-claude-cook
 ```
 
 ## Plugins
@@ -104,6 +106,21 @@ config, code three hops away), finds the one fact the change is safe because of,
 /are-we-cooked:are-we-cooked            the uncommitted diff
 /are-we-cooked:are-we-cooked PR 42
 ```
+
+### `mise-en-place`: prep the kitchen before cooking
+
+A session-start hook, nothing to type. Every time a session starts in a git repo it:
+
+- builds or refreshes a [graphify](https://pypi.org/project/graphifyy/) code graph in the
+  background (code is parsed on your machine, so **no AI tokens**)
+- hides `graphify-out/` from git on that machine only (`.git/info/exclude`, never
+  `.gitignore`), so it never shows up as a change
+- tells Claude to answer code questions with `graphify query` / `explain` / `path` first
+  and only open the files the graph points to
+
+Needs graphify installed (`uv tool install graphifyy`). Without it, or outside a git repo,
+it quietly does nothing. It builds the graph for the folder the session opens in, not
+for every attached repo.
 
 > `receipts`, `lore` and `are-we-cooked` start several sub agents, so they use more
 > tokens than a normal question. All three are read-only on your code.

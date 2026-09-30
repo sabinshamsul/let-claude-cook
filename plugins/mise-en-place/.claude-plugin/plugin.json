@@ -1,0 +1,11 @@
+{
+  "name": "mise-en-place",
+  "description": "Prep before cooking: at session start, builds a graphify code graph in the background (no AI tokens) and tells Claude to query the graph before opening files.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Syahmi Shamsul",
+    "url": "https://github.com/sabinshamsul"
+  },
+  "homepage": "https://github.com/sabinshamsul/let-claude-cook",
+  "repository": "https://github.com/sabinshamsul/let-claude-cook"
+}
