@@ -10,6 +10,11 @@
       "name": "bruh",
       "source": "./plugins/bruh",
       "description": "Explain the latest output in plain English: ELI5, tables, correct terms explained."
+    },
+    {
+      "name": "vibe-check",
+      "source": "./plugins/vibe-check",
+      "description": "Vibe check a Jira ticket: classify it (query, data bug, code bug) and propose the next step."
     }
   ]
 }
