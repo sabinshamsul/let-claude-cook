@@ -10,6 +10,9 @@ A [Claude Code](https://code.claude.com) plugin marketplace.
 claude plugin marketplace add sabinshamsul/let-claude-cook
 claude plugin install bruh@let-claude-cook
 claude plugin install vibe-check@let-claude-cook
+claude plugin install receipts@let-claude-cook
+claude plugin install lore@let-claude-cook
+claude plugin install are-we-cooked@let-claude-cook
 ```
 
 Or from inside a Claude Code session:
@@ -18,6 +21,9 @@ Or from inside a Claude Code session:
 /plugin marketplace add sabinshamsul/let-claude-cook
 /plugin install bruh@let-claude-cook
 /plugin install vibe-check@let-claude-cook
+/plugin install receipts@let-claude-cook
+/plugin install lore@let-claude-cook
+/plugin install are-we-cooked@let-claude-cook
 ```
 
 ## Plugins
@@ -65,6 +71,46 @@ from your repo's `CLAUDE.md` or README, so document it there.
 ```
 /vibe-check:vibe-check PROJ-150
 ```
+
+### `receipts`: why is the code like this?
+
+Ask why something exists (a threshold, a workaround, a weird branch) and it sends one
+investigator per evidence source you have connected, all at once: git and PRs, your
+ticket tracker, docs, team chat, monitoring, error tracking, analytics. A synthesizer
+then writes one answer where every claim is tagged **Direct**, **Supported**,
+**Inferred** or **Speculative**, with citations, plus what nobody could find.
+
+```
+/receipts:receipts why do we retry 3 times in fetchPrices?
+```
+
+### `lore`: how does this work?
+
+A walkthrough of a subsystem for someone new to it: overview, key concepts, the flow
+step by step, where things live, gotchas. Big questions get 2 to 4 explorers tracing
+different slices in parallel, then one explainer merges them.
+
+```
+/lore:lore how does the nightly price refetch work?
+```
+
+### `are-we-cooked`: what could this break?
+
+Before you ship, it looks for breakage outside the diff (data formats, timing,
+config, code three hops away), finds the one fact the change is safe because of, and
+**proves it by running real code** instead of just claiming it.
+
+```
+/are-we-cooked:are-we-cooked            the uncommitted diff
+/are-we-cooked:are-we-cooked PR 42
+```
+
+> `receipts`, `lore` and `are-we-cooked` start several sub agents, so they use more
+> tokens than a normal question. All three are read-only on your code.
+>
+> They are adapted from `why`, `how` and `blast-radius` in
+> [pstack](https://github.com/cursor/plugins/tree/main/pstack) by Lauren Tan (MIT).
+> Each plugin carries the original licence as `LICENSE-pstack`.
 
 ## Try a plugin without installing
 

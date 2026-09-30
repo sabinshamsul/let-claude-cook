@@ -1,0 +1,12 @@
+{
+  "name": "are-we-cooked",
+  "description": "Are we cooked? Find what a change could break outside the diff, and prove the one fact it is safe because of by running real code. Adapted from pstack's blast-radius.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Syahmi Shamsul",
+    "url": "https://github.com/sabinshamsul"
+  },
+  "homepage": "https://github.com/sabinshamsul/let-claude-cook",
+  "repository": "https://github.com/sabinshamsul/let-claude-cook",
+  "license": "MIT"
+}

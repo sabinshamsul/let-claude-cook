@@ -15,6 +15,21 @@
       "name": "vibe-check",
       "source": "./plugins/vibe-check",
       "description": "Vibe check a Jira ticket: classify it (query, data bug, code bug) and propose the next step."
+    },
+    {
+      "name": "receipts",
+      "source": "./plugins/receipts",
+      "description": "Why is the code like this? Parallel investigators across git, tickets, docs and chat, one cited answer."
+    },
+    {
+      "name": "lore",
+      "source": "./plugins/lore",
+      "description": "How does this work? Parallel explorers trace the code, one explainer writes the walkthrough."
+    },
+    {
+      "name": "are-we-cooked",
+      "source": "./plugins/are-we-cooked",
+      "description": "What could this change break outside the diff? Proves the safety fact by running real code."
     }
   ]
 }

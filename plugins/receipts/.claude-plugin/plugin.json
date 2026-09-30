@@ -1,0 +1,12 @@
+{
+  "name": "receipts",
+  "description": "Show me the receipts: why is the code like this? Parallel investigators search git, PRs, tickets, docs and chat, then a synthesizer gives a cited, confidence-rated answer. Adapted from pstack's why.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Syahmi Shamsul",
+    "url": "https://github.com/sabinshamsul"
+  },
+  "homepage": "https://github.com/sabinshamsul/let-claude-cook",
+  "repository": "https://github.com/sabinshamsul/let-claude-cook",
+  "license": "MIT"
+}

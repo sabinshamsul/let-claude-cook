@@ -1,0 +1,12 @@
+{
+  "name": "lore",
+  "description": "The lore of a subsystem: how does X work? Parallel explorers trace the code, then an explainer writes one senior-engineer walkthrough. Adapted from pstack's how.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Syahmi Shamsul",
+    "url": "https://github.com/sabinshamsul"
+  },
+  "homepage": "https://github.com/sabinshamsul/let-claude-cook",
+  "repository": "https://github.com/sabinshamsul/let-claude-cook",
+  "license": "MIT"
+}
