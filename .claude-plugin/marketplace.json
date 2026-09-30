@@ -1,0 +1,15 @@
+{
+  "name": "let-claude-cook",
+  "description": "Skills that let your agent cook. Claude Code plugins by Syahmi Shamsul.",
+  "owner": {
+    "name": "Syahmi Shamsul",
+    "url": "https://github.com/sabinshamsul"
+  },
+  "plugins": [
+    {
+      "name": "bruh",
+      "source": "./plugins/bruh",
+      "description": "Explain the latest output in plain English: ELI5, tables, correct terms explained."
+    }
+  ]
+}
