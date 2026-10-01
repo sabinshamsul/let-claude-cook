@@ -34,6 +34,21 @@ Or from inside a Claude Code session:
 
 ## Plugins
 
+| Plugin | Type | You type | Its agents | What it does |
+|---|---|---|---|---|
+| `bruh` | Skill | `/bruh:bruh` | none | Explains the latest output in plain English |
+| `vibe-check` | Skill | `/vibe-check:vibe-check KEY` | none | Reads a Jira ticket, classifies it, suggests the next step |
+| `are-we-cooked` | Skill | `/are-we-cooked:are-we-cooked` | none (borrows built-in helpers for big changes) | Finds what a change could break and proves it is safe |
+| `receipts` | Skill + agents | `/receipts:receipts why ...?` | `investigator`, `synthesizer` | Explains why code is the way it is, with cited evidence |
+| `lore` | Skill + agents | `/lore:lore how ...?` | `explorer`, `explainer` | Walks you through how a part of the code works |
+| `the-pass` | Skill + agents | `/the-pass:the-pass 42` | `inspector` | Independent PR review: fixes findings, verifies, posts a verdict |
+| `let-it-cook` | Skill + agents | `/let-it-cook:let-it-cook KEY` | `jira-clerk` (plus `the-pass:inspector`) | Takes a Jira ticket all the way to a reviewed, watched PR |
+| `mise-en-place` | Hook | nothing, runs at session start | none | Builds a code graph so Claude reads fewer files |
+
+**Skill:** a command you type; it runs in your session. **Agent:** a helper a skill starts by
+itself, with a fresh memory and usually a cheaper model. **Hook:** runs on its own when
+something happens.
+
 ### `bruh`: explain it like I'm five, but get it right
 
 Your agent just dumped a wall of ticket comments, PR reviews, query results or
