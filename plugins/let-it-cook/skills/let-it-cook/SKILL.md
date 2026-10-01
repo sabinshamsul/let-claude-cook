@@ -14,6 +14,7 @@ The user's CLAUDE.md has their company context (Jira site, repos, tables, how to
 
 - Never commit, push, open a PR or post to Jira before the matching checkpoint below.
 - Never push to the default branch, merge, or approve a PR.
+- Never move a ticket to Done or any closing status, and never close it. The tester does that, even for tickets the user reported. Ticket moves only go forward: In Progress when work starts, Testing after the PR is merged.
 - Never run anything that writes to a database. Never touch production data: use fixtures, samples or staging read-only queries.
 - Never skip, delete or weaken a test to get green.
 - Keep the diff to what the ticket needs.
@@ -22,9 +23,11 @@ The user's CLAUDE.md has their company context (Jira site, repos, tables, how to
 
 Spawn `let-it-cook:jira-clerk` with `brief <KEY>`. Show the user the brief as returned (it is short).
 
+If a PR for this ticket is **already merged** and the ticket is still in progress, skip straight to step 9 (after merge).
+
 Then decide by **Type**:
-- `code bug`: carry on.
-- `data bug` or `query only`: follow the "Running SQL" rules in CLAUDE.md. If this session can reach the database, write the query under `scripts/`, run it read-only, summarise the result with a script, and decide whether it is really a code bug, a data fix (write the fix script for the user to review and run; never run it) or no bug. If this session cannot reach the database, write the SQL file, tell the user to run it in a local session, and stop.
+- `code bug`: spawn `let-it-cook:jira-clerk` with `move <KEY> to In Progress` (it does nothing if the ticket is already there or further), tell the user the result in one line, and carry on.
+- `data bug` or `query only`: move the ticket to In Progress the same way, then follow the "Running SQL" rules in CLAUDE.md. If this session can reach the database, write the query under `scripts/`, run it read-only, summarise the result with a script, and decide whether it is really a code bug, a data fix (write the fix script for the user to review and run; never run it) or no bug. If this session cannot reach the database, write the SQL file, tell the user to run it in a local session, and stop.
 - `unclear`: say what is missing and stop.
 
 ## 2. Find the code (cheap)
@@ -74,8 +77,15 @@ After "ship it":
 2. Show the draft. End with: **Reply "post it" to post this on <KEY>, or tell me what to change.**
 3. After "post it", spawn `let-it-cook:jira-clerk` with `post <KEY>` and the exact approved text. Report the link.
 
-## 8. Done
+## 8. Wrap up
 
-One short wrap-up: PR link, review verdict, Jira comment link, what the PR watch will handle, and anything left for the user (e.g. a backfill after deploy).
+One short wrap-up: PR link, review verdict, Jira comment link, ticket status (In Progress until the PR merges), what the PR watch will handle, and anything left for the user (e.g. a backfill after deploy).
+
+## 9. After the PR is merged
+
+When the PR watch reports the PR merged, or the user says so, or `/let-it-cook <KEY>` is run again on a ticket whose PR is merged:
+1. Spawn `let-it-cook:jira-clerk` with `move <KEY> to Testing`. Report the result.
+2. Draft a short comment with `let-it-cook:jira-clerk` (`draft <KEY>`): the PR is merged, what to test and how, and any step needed after deploy. Show it and wait for **"post it"** as in step 7.
+3. Never move it to Done. Say: "Ready for testing. Closing is up to the tester." 
 
 Never put an em dash (the long dash) in the output, commits, PRs or comments. Use a comma, colon, full stop or brackets instead.

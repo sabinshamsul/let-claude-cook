@@ -127,6 +127,11 @@ config, code three hops away), finds the one fact the change is safe because of,
 7. `jira-clerk` drafts the ticket comment (plain-English summary plus technical details).
    **Nothing is posted until you reply "post it"**
 
+**Ticket status moves forward by itself:** to *In Progress* when work starts, and to
+*Testing* once the PR is merged (rerun `/let-it-cook` on the ticket after merge if the
+session has ended). It **never** moves a ticket to Done or any closing status: closing is
+the tester's job, even on tickets you reported.
+
 Data bugs follow the "Running SQL" rules in your own CLAUDE.md, so the company-specific
 database steps live with you, not in this repo. It never merges, never pushes to the
 default branch, and never runs writes against a database.
