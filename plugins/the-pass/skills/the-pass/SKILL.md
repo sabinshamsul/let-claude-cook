@@ -1,12 +1,12 @@
 ---
 name: the-pass
-description: Independent review of an open pull request, then fix, verify and report. A fresh reviewer agent (no knowledge of how the change was written) reviews the PR, every valid finding gets fixed, tested and pushed to the PR's branch, a re-review confirms it, the change is run in the sandbox (app run or browser walkthrough), and a verdict comment is posted on the PR. Use only when the user invokes /the-pass by name, e.g. "/the-pass 42" or "/the-pass" for the current branch's PR.
+description: Independent review of an open pull request, then fix, verify and report. A fresh reviewer agent (no knowledge of how the change was written) reviews the PR, every valid finding gets fixed, tested and pushed to the PR's branch, a re-review confirms it, the change is run in the sandbox (app run or browser walkthrough), and a verdict comment is posted on the PR. If the PR belongs to a Jira ticket, a ticket comment is drafted and posted only after the user's "post it". Use only when the user invokes /the-pass by name, e.g. "/the-pass 42" or "/the-pass" for the current branch's PR.
 disable-model-invocation: true
 ---
 
 # /the-pass [PR number or link]
 
-Every plate gets checked before it goes out. Running this command is the user's go-ahead to commit and push review fixes **to this PR's branch** and to post one verdict comment on the PR. Nothing else.
+Every plate gets checked before it goes out. Running this command is the user's go-ahead to commit and push review fixes **to this PR's branch** and to post one verdict comment on the PR. A Jira comment is only drafted; it is posted after the user replies "post it". Nothing else.
 
 ## Hard rules
 
@@ -70,6 +70,15 @@ Use **Approved** when there were no findings, **Approved after fixes** when ever
 
 ## 8. Tell the user
 
-PR link, the verdict, the fix commit, what verification showed (attach the screenshot if there is one), and anything still open that needs a human.
+PR link, the verdict, the fix commit, what verification showed (attach the screenshot if there is one), and anything still open that needs a human. Then do step 9.
+
+## 9. Jira comment (if the PR belongs to a ticket)
+
+Skip this step when `/the-pass` was run from inside `/let-it-cook`; that skill drafts its own Jira comment.
+
+1. Look for a ticket key in the PR title, branch name or description: an explicit key like `DATA-155`, or the lowercase form in a title or branch like `fix(data155)` or `fix/data155` (which means DATA-155). No key found: skip this step.
+2. Draft the comment with `let-it-cook:jira-clerk` (`draft <KEY>`, kind: fix), giving it the facts: root cause and fix (from the PR description and diff), PR link and title, tests, the review verdict and findings, what verification showed, and follow-up after deploy. If that agent isn't installed, draft it yourself in the same shape: a 3 to 4 sentence plain-English summary for a manager, then short technical-details bullets.
+3. Show the draft and end with: **Reply "post it" to post this on <KEY>, or tell me what to change.** Wait.
+4. After "post it", post it (`let-it-cook:jira-clerk` with `post <KEY>` and the exact approved text, or the Atlassian tools). Report the link. Don't change the ticket's status here.
 
 Never put an em dash (the long dash) in the output, commits or the PR comment. Use a comma, colon, full stop or brackets instead.

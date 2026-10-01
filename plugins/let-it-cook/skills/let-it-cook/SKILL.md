@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # /let-it-cook <TICKET-KEY>
 
-Take one Jira ticket from "assigned" to "PR open and watched", with the user stepping in only at two checkpoints: **"ship it"** (commit and PR) and **"post it"** (Jira comment).
+Take one Jira ticket from "assigned" to "PR open and watched", with the user stepping in only at checkpoints: **"post it"** (any Jira comment), **"ship it"** (commit and PR) and, where allowed, **"close it"** (close the ticket). Request tickets (access, roles, admin tasks) skip the code steps.
 
 The user's CLAUDE.md has their company context (Jira site, repos, tables, how to run SQL, title conventions). Follow it wherever it is more specific than this skill.
 
@@ -14,21 +14,26 @@ The user's CLAUDE.md has their company context (Jira site, repos, tables, how to
 
 - Never commit, push, open a PR or post to Jira before the matching checkpoint below.
 - Never push to the default branch, merge, or approve a PR.
-- Never move a ticket to Done or any closing status, and never close it. The tester does that, even for tickets the user reported. Ticket moves only go forward: In Progress when work starts, Testing after the PR is merged.
+- Ticket moves only go forward: In Progress when work starts, Testing after the PR is merged.
+- **Closing (Done or any closing status):** never on a ticket the user **reported**; someone else tests and closes those. On a ticket assigned to the user but reported by **someone else**, close it only after the user replies **"close it"** to a closing comment draft.
 - Never run anything that writes to a database. Never touch production data: use fixtures, samples or staging read-only queries.
 - Never skip, delete or weaken a test to get green.
 - Keep the diff to what the ticket needs.
 
-## 1. Brief (cheap)
+## 1. Brief and start (cheap)
 
 Spawn `let-it-cook:jira-clerk` with `brief <KEY>`. Show the user the brief as returned (it is short).
 
-If a PR for this ticket is **already merged** and the ticket is still in progress, skip straight to step 9 (after merge).
+If a PR for this ticket is **already merged** and the ticket is still in progress, skip straight to step 9 (after merge). If the user says a **request** ticket is done, skip straight to step 10.
+
+Unless the type is `unclear` (say what is missing and stop, without moving or commenting):
+1. Spawn `let-it-cook:jira-clerk` with `move <KEY> to In Progress` (it does nothing if the ticket is already there or further). Tell the user the result in one line.
+2. Draft a short **starting comment** with `let-it-cook:jira-clerk` (`draft <KEY>`, kind: starting): picked up, the type in plain words, the first read of the likely cause or what is being asked, and the next step. Show it and end with: **Reply "post it" to post this and carry on, or "skip" to carry on without posting.** Wait. After "post it", post it with `post <KEY>`.
 
 Then decide by **Type**:
-- `code bug`: spawn `let-it-cook:jira-clerk` with `move <KEY> to In Progress` (it does nothing if the ticket is already there or further), tell the user the result in one line, and carry on.
-- `data bug` or `query only`: move the ticket to In Progress the same way, then follow the "Running SQL" rules in CLAUDE.md. If this session can reach the database, write the query under `scripts/`, run it read-only, summarise the result with a script, and decide whether it is really a code bug, a data fix (write the fix script for the user to review and run; never run it) or no bug. If this session cannot reach the database, write the SQL file, tell the user to run it in a local session, and stop.
-- `unclear`: say what is missing and stop.
+- `code bug`: carry on to step 2.
+- `data bug` or `query only`: follow the "Running SQL" rules in CLAUDE.md. If this session can reach the database, write the query under `scripts/`, run it read-only, summarise the result with a script, and decide whether it is really a code bug (carry on to step 2), a data fix (write the fix script for the user to review and run; never run it) or no bug. If this session cannot reach the database, write the SQL file, tell the user to run it in a local session, and stop.
+- `request` (access, permissions, a role change or upgrade, an account or admin task; no code): skip the code, PR and review steps. Show a short checklist: what is being asked, for whom, where (e.g. which portal or system), and who can do it (the user, or someone with the right access). Don't do the change yourself. Stop, and tell the user: when it's done, run `/let-it-cook <KEY>` again or say "done", and step 10 closes it out.
 
 ## 2. Find the code (cheap)
 
@@ -85,7 +90,15 @@ One short wrap-up: PR link, review verdict, Jira comment link, ticket status (In
 
 When the PR watch reports the PR merged, or the user says so, or `/let-it-cook <KEY>` is run again on a ticket whose PR is merged:
 1. Spawn `let-it-cook:jira-clerk` with `move <KEY> to Testing`. Report the result.
-2. Draft a short comment with `let-it-cook:jira-clerk` (`draft <KEY>`): the PR is merged, what to test and how, and any step needed after deploy. Show it and wait for **"post it"** as in step 7.
-3. Never move it to Done. Say: "Ready for testing. Closing is up to the tester." 
+2. Draft a short comment with `let-it-cook:jira-clerk` (`draft <KEY>`, kind: merged): the PR is merged, what to test and how, and any step needed after deploy.
+3. Show it. If the user **reported** this ticket, end with: **Reply "post it" to post this. Closing is up to the tester.** If someone else reported it, end with: **Reply "post it" to post this and leave it in Testing, or "close it" to post it and close the ticket.**
+4. After "post it": post. After "close it": post, then spawn `let-it-cook:jira-clerk` with `close <KEY> (approved by user)`. Report the result.
+
+## 10. Request tickets: done
+
+When the user says a request ticket is done (or reruns `/let-it-cook <KEY>` and says so):
+1. Draft a closing comment with `let-it-cook:jira-clerk` (`draft <KEY>`, kind: request done): what was done, for whom, when, and anything the requester needs to do next.
+2. Show it. If someone else reported the ticket, end with: **Reply "close it" to post this and close the ticket, or "post it" to post only.** If the user reported it, end with: **Reply "post it" to post this. Closing is up to someone else.**
+3. Post, and close only after "close it" (`close <KEY> (approved by user)`). Report the result.
 
 Never put an em dash (the long dash) in the output, commits, PRs or comments. Use a comma, colon, full stop or brackets instead.

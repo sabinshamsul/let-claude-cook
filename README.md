@@ -127,10 +127,18 @@ config, code three hops away), finds the one fact the change is safe because of,
 7. `jira-clerk` drafts the ticket comment (plain-English summary plus technical details).
    **Nothing is posted until you reply "post it"**
 
-**Ticket status moves forward by itself:** to *In Progress* when work starts, and to
-*Testing* once the PR is merged (rerun `/let-it-cook` on the ticket after merge if the
-session has ended). It **never** moves a ticket to Done or any closing status: closing is
-the tester's job, even on tickets you reported.
+**Jira, step by step** (every comment is drafted first and posted only after "post it"):
+
+| When | Status | Comment |
+|---|---|---|
+| Work starts | moves to *In Progress* | short "picked this up" comment |
+| PR open and reviewed | | full fix comment: plain summary plus technical details |
+| PR merged | moves to *Testing* | "merged, here's what to test" |
+| Closing | to *Done* only if **someone else** reported the ticket and you reply "close it" | closing comment |
+
+Tickets **you** reported are never closed by it: someone else tests and closes those.
+**Request tickets** (access, role changes, admin tasks) skip the code steps: it gives you
+a checklist, and when you say it's done it drafts the closing comment.
 
 Data bugs follow the "Running SQL" rules in your own CLAUDE.md, so the company-specific
 database steps live with you, not in this repo. It never merges, never pushes to the
@@ -152,7 +160,8 @@ using Claude Code's built-in `run` skill; then one verdict comment goes on the P
 fixes** or **Needs attention**) with a table of findings and what happened to each.
 Running it is your go-ahead to push those fixes to that PR branch. It never pushes to
 the default branch, never force-pushes, never merges or approves. `let-it-cook` runs it
-automatically after opening a PR.
+automatically after opening a PR. Run on its own, it also spots the ticket key in the PR
+title or branch (e.g. `fix(data155)`) and drafts the Jira comment, posted only after "post it".
 
 ### `mise-en-place`: prep the kitchen before cooking
 
