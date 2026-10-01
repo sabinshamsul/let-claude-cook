@@ -1,7 +1,7 @@
 {
   "name": "let-it-cook",
-  "description": "One command from Jira ticket to reviewed PR: brief the ticket, find the code, fix and test, review, stop for 'ship it', open and watch the PR, then draft the Jira comment for approval.",
-  "version": "1.0.0",
+  "description": "One command from Jira ticket to independently reviewed PR: brief the ticket, find the code, fix and test, stop for \"ship it\", open the PR, run an independent review and post its verdict, watch the PR, then draft the Jira comment for approval.",
+  "version": "1.2.0",
   "author": {
     "name": "Syahmi Shamsul",
     "url": "https://github.com/sabinshamsul"

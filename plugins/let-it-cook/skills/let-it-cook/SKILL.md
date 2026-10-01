@@ -1,6 +1,6 @@
 ---
 name: let-it-cook
-description: One command from Jira ticket to reviewed PR. Briefs the ticket (cheap helper), finds the code, makes the smallest fix plus a test, runs tests, gets a fresh-eyes review (max 2 fix rounds), then STOPS for the user's "ship it" before committing, pushing and opening the PR. Then watches the PR and drafts the Jira comment for approval before posting. Use only when the user invokes /let-it-cook by name, e.g. "/let-it-cook DATA-160".
+description: One command from Jira ticket to independently reviewed PR. Briefs the ticket (cheap helper), finds the code, makes the smallest fix plus a test, runs tests, then STOPS for the user's "ship it" before committing, pushing and opening the PR. Then an independent reviewer checks the PR, findings are fixed and pushed, a verdict is posted on the PR, the PR is watched, and the Jira comment is drafted for approval before posting. Use only when the user invokes /let-it-cook by name, e.g. "/let-it-cook DATA-160".
 disable-model-invocation: true
 ---
 
@@ -40,11 +40,7 @@ Then decide by **Type**:
 3. Make the smallest fix that makes it pass.
 4. Run the repo's test command (from its CLAUDE.md or README, or the one `Explore` found). Also run the build and vet or lint if cheap.
 
-## 4. Review (max 2 rounds)
-
-Spawn `let-it-cook:reviewer` with the brief (2 lines) and how to get the diff. Fix every **major** finding, and minors that are quick and clearly right. Re-review once only if you changed code for a major. After 2 rounds, stop fixing and report what is left.
-
-## 5. Checkpoint: "ship it"
+## 4. Checkpoint: "ship it"
 
 Stop and show the user:
 
@@ -52,27 +48,34 @@ Stop and show the user:
 - **Root cause:** 1 to 2 plain lines
 - **Fix:** files changed, with `git diff --stat`
 - **Tests:** what ran, and pass or fail
-- **Review:** major / minor / nit counts, what was fixed, what is left
 - **Commit and PR title:** following the CLAUDE.md convention (e.g. `fix(data160): <what it fixes>`)
-- **PR description:** a short draft (problem, root cause, fix, tests, review findings, follow-up after deploy)
+- **PR description:** a short draft (problem, root cause, fix, tests, follow-up after deploy)
 
-End with: **Reply "ship it" to commit, push and open the PR, or tell me what to change.** Then wait. Anything other than a clear go-ahead means revise and show the summary again.
+End with: **Reply "ship it" to commit, push, open the PR and run the independent review on it, or tell me what to change.** "ship it" also covers pushing that review's fixes to the same PR branch. Then wait. Anything other than a clear go-ahead means revise and show the summary again.
 
-## 6. Ship
+## 5. Ship
 
 After "ship it":
 1. Commit with the agreed title, and push the branch.
 2. Open the PR against the default branch with the agreed title and description, using the GitHub tools (or `gh` where that is what the session has).
-3. Watch the PR if this session can (subscribe to its activity), so CI failures and review comments are handled; otherwise tell the user to say "watch this PR".
+
+## 6. Independent review on the PR (max 2 rounds)
+
+1. Spawn `the-pass:inspector` with only the repo, the PR number, and the base and head branch names. Don't give it your reasoning or the ticket summary: it must judge the PR on its own. (Needs the `the-pass` plugin. If it is missing, use a general-purpose sub agent with the same minimal input.)
+2. Fix every valid finding (majors first, then minors and nits). For any you don't fix, note the evidence for why. Run the tests, commit (e.g. `fix(data160): address review findings`) and push to the PR branch.
+3. If anything major or minor was fixed, run the inspector once more and repeat. Stop after 2 rounds.
+3b. Verify it works in this sandbox, the same way as `/the-pass` step 6: use the `run` skill; a browser walkthrough with a screenshot for a web UI, or a dry-run or read-only run of the affected job or command for a pipeline or CLI. Never write to a real database. If it can't run here, state what blocked it and what the user should run.
+4. Post one verdict comment on the PR: **Independent review: Approved / Approved after fixes / Needs attention**, one or two plain sentences, a table of findings (severity, `file:line`, finding, status: fixed in `<sha>` or not changed and why), the tests run, what verification showed, and the number of rounds.
+5. Watch the PR if this session can (subscribe to its activity), so CI failures and review comments are handled; otherwise tell the user to say "watch this PR".
 
 ## 7. Jira comment: "post it"
 
-1. Spawn `let-it-cook:jira-clerk` with `draft <KEY>` and the facts: root cause, fix, PR link and title, tests, review findings, follow-up after deploy, anything not fixed here.
+1. Spawn `let-it-cook:jira-clerk` with `draft <KEY>` and the facts: root cause, fix, PR link and title, tests, the review verdict and findings, follow-up after deploy, anything not fixed here.
 2. Show the draft. End with: **Reply "post it" to post this on <KEY>, or tell me what to change.**
 3. After "post it", spawn `let-it-cook:jira-clerk` with `post <KEY>` and the exact approved text. Report the link.
 
 ## 8. Done
 
-One short wrap-up: PR link, Jira comment link, what the PR watch will handle, and anything left for the user (e.g. a backfill after deploy).
+One short wrap-up: PR link, review verdict, Jira comment link, what the PR watch will handle, and anything left for the user (e.g. a backfill after deploy).
 
 Never put an em dash (the long dash) in the output, commits, PRs or comments. Use a comma, colon, full stop or brackets instead.

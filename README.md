@@ -15,6 +15,7 @@ claude plugin install lore@let-claude-cook
 claude plugin install are-we-cooked@let-claude-cook
 claude plugin install mise-en-place@let-claude-cook
 claude plugin install let-it-cook@let-claude-cook
+claude plugin install the-pass@let-claude-cook
 ```
 
 Or from inside a Claude Code session:
@@ -28,6 +29,7 @@ Or from inside a Claude Code session:
 /plugin install are-we-cooked@let-claude-cook
 /plugin install mise-en-place@let-claude-cook
 /plugin install let-it-cook@let-claude-cook
+/plugin install the-pass@let-claude-cook
 ```
 
 ## Plugins
@@ -118,15 +120,34 @@ config, code three hops away), finds the one fact the change is safe because of,
 1. A cheap Jira helper (`jira-clerk`, Sonnet) reads the ticket and every comment and classifies it
 2. Finds the code (graphify first, then the built-in Haiku `Explore` helper)
 3. Smallest fix plus a failing-then-passing test, and runs the tests
-4. A fresh-eyes `reviewer` (Sonnet) checks the diff; major findings get fixed, max 2 rounds
-5. **Stops and shows you a summary. Nothing is committed until you reply "ship it"**
-6. Commits, pushes a branch, opens the PR, and watches it for CI failures and review comments
+4. **Stops and shows you a summary. Nothing is committed until you reply "ship it"**
+5. Commits, pushes a branch and opens the PR
+6. Runs **the pass** on it (below): independent review, fixes pushed, verdict posted on the PR,
+   then watches the PR for CI failures and review comments
 7. `jira-clerk` drafts the ticket comment (plain-English summary plus technical details).
    **Nothing is posted until you reply "post it"**
 
 Data bugs follow the "Running SQL" rules in your own CLAUDE.md, so the company-specific
 database steps live with you, not in this repo. It never merges, never pushes to the
 default branch, and never runs writes against a database.
+
+### `the-pass`: every plate checked before it goes out
+
+```
+/the-pass:the-pass 42          a PR number or link
+/the-pass:the-pass             the open PR for the current branch
+```
+
+An independent `inspector` agent (Sonnet) reviews the PR knowing only what is in the PR:
+title, description, linked ticket, diff and the code around it, not how it was written.
+Every valid finding gets fixed, tested and pushed to the PR's own branch; a second round
+checks the fixes; then it **proves the change works in the sandbox** (runs the affected
+job or command read-only, or walks through the web UI in a real browser with a screenshot)
+using Claude Code's built-in `run` skill; then one verdict comment goes on the PR (**Approved**, **Approved after
+fixes** or **Needs attention**) with a table of findings and what happened to each.
+Running it is your go-ahead to push those fixes to that PR branch. It never pushes to
+the default branch, never force-pushes, never merges or approves. `let-it-cook` runs it
+automatically after opening a PR.
 
 ### `mise-en-place`: prep the kitchen before cooking
 
