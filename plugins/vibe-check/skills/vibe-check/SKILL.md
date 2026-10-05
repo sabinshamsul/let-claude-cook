@@ -1,15 +1,20 @@
 ---
 name: vibe-check
-description: Vibe check a Jira ticket (e.g. /vibe-check PROJ-150). Reads the ticket and all comments, classifies it as query-only, data bug, or API/code bug, and proposes the next step. Read-only, changes nothing.
+description: Vibe check a Jira ticket (e.g. /vibe-check PROJ-150, or just /vibe-check for the ticket already in this session). Uses the ticket content already in the conversation when it is there (for example after /bruh or an earlier Jira read), and only fetches from Jira if it is missing or the user asks to refresh. Classifies it as query-only, data bug, or API/code bug, and proposes the next step. Read-only, changes nothing.
 model: sonnet
 disable-model-invocation: true
 ---
 
-# /vibe-check <TICKET-KEY>
+# /vibe-check [TICKET-KEY] [refresh]
 
 Read-only. Never edit files, commit, push, run SQL, or post to Jira unless the user asks.
 
-1. **Read** the ticket with the Atlassian tools: summary, description, status, assignee, linked issues, and ALL comments (oldest → newest). Note anything already tried or ruled out.
+1. **Get the ticket, from this session first.** Don't call Jira if you don't have to.
+   - **Which ticket:** the key the user gave. With no key, use the ticket most recently discussed or fetched in this session (from `/bruh`, `/let-it-cook`, an earlier read, or the user pasting it). If there is none, ask which ticket.
+   - **Already in the conversation?** Look back for that ticket's summary, description, status, assignee and **all** comments. If they are there, use them as they are and don't fetch. Say in one line what you are using, e.g. "Using DATA-159 as already read in this session."
+   - **Fetch only what is missing.** If only part is there (say the description but no comments, or the output was truncated), fetch just the missing part with the Atlassian tools (e.g. comments only), not the whole ticket again.
+   - **Fetch the whole ticket** only if nothing usable is in the conversation, the earlier content was lost (for example after a compact), or the user asks to **refresh** or says the ticket changed. Then read: summary, description, status, assignee, linked issues, and ALL comments (oldest to newest).
+   - Note anything already tried or ruled out.
 2. **Classify** as exactly one:
    - **Query only**: needs data looked up / verified, no fix expected.
    - **Data bug**: wrong/missing rows in the database; fix is a SQL script.
@@ -21,6 +26,7 @@ Read-only. Never edit files, commit, push, run SQL, or post to Jira unless the u
    - API/code bug → name the likely file(s) and function(s) with `file:line`, and suggest `/test` to reproduce it first.
 
 ## Output (keep it short)
+- **Source:** from this session, partly refreshed (say which part), or fetched fresh
 - **Ticket:** one-line summary + status
 - **What's been tried:** from comments (or "nothing yet")
 - **Type:** query / data bug / API bug / unclear, and why, in one line

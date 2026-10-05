@@ -37,7 +37,7 @@ Or from inside a Claude Code session:
 | Plugin | Type | You type | Its agents | What it does |
 |---|---|---|---|---|
 | `bruh` | Skill | `/bruh:bruh` | none | Explains the latest output in plain English |
-| `vibe-check` | Skill | `/vibe-check:vibe-check KEY` | none | Reads a Jira ticket, classifies it, suggests the next step |
+| `vibe-check` | Skill | `/vibe-check:vibe-check KEY` | none | Classifies a Jira ticket and suggests the next step, reusing the ticket already in your session |
 | `are-we-cooked` | Skill | `/are-we-cooked:are-we-cooked` | none (borrows built-in helpers for big changes) | Finds what a change could break and proves it is safe |
 | `receipts` | Skill + agents | `/receipts:receipts why ...?` | `investigator`, `synthesizer` | Explains why code is the way it is, with cited evidence |
 | `lore` | Skill + agents | `/lore:lore how ...?` | `explorer`, `explainer` | Walks you through how a part of the code works |
@@ -77,7 +77,10 @@ when you type it.
 
 ### `vibe-check`: what kind of problem is this ticket?
 
-Give it a Jira ticket key and it reads the ticket and every comment, then tells you:
+Give it a Jira ticket key and it works out what kind of problem it is. **It reuses the
+ticket already in your session** (for example after `/bruh` or an earlier read), so it
+doesn't pay to read Jira twice. It only fetches what is missing, or everything if you say
+`refresh`. It then tells you:
 
 - **Ticket**: one-line summary and status
 - **What's been tried**: pulled from the comments
@@ -90,7 +93,9 @@ It needs the Atlassian (Jira) connector, and it takes the command for running SQ
 from your repo's `CLAUDE.md` or README, so document it there.
 
 ```
-/vibe-check:vibe-check PROJ-150
+/vibe-check:vibe-check PROJ-150            reuse the ticket if it is already in this session
+/vibe-check:vibe-check                      the ticket you were just looking at
+/vibe-check:vibe-check PROJ-150 refresh     read it from Jira again
 ```
 
 ### `receipts`: why is the code like this?
